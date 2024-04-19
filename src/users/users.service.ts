@@ -32,11 +32,11 @@ export class UsersService {
   }
 
   findAll() {
-    return this.userRepo.finds({ relations: ['posts'] });
+    return this.userRepo.find({ relations: ['posts'] });
   }
 
   async findOne(username: string): Promise<UserEntity> {
-    return await this.userRepo.findOne({ where: { username } });
+    return await this.userRepo.findOnes({ where: { username } });
   }
 
   async findByEmail(email: string) {
