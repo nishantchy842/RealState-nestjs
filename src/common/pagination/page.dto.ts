@@ -29,7 +29,7 @@ export class PageDto<T> {
     this.itemCount = itemCount;
     if (pageOptionDto) {
       this.page = pageOptionDto.page;
-      this.pageCount = Math.ceil(itemCount / this.take);
+      this.pageCount = Math.ceil(itemCount / pageOptionDto.take);
       this.take = pageOptionDto.take;
       this.hasPreviousPage = this.page > 1;
       this.hasNextPage = this.page < this.pageCount;

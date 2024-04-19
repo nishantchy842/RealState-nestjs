@@ -10,6 +10,7 @@ import {
   Req,
   UseGuards,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -20,6 +21,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { ApiResponseInterceptor } from 'src/common/interceptors/apiResponse.interceptor';
+import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
+import { ValidateUser } from 'src/common/interceptors/validateUser.interceptor';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -35,8 +38,9 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  @UseInterceptors(ApiResponseInterceptor)
+  findAll(@Query() pageOptionDto: PageOptionsDto) {
+    return this.postsService.findAll(pageOptionDto);
   }
 
   @Get(':id')
@@ -46,11 +50,16 @@ export class PostsController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ValidateUser)
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
   }

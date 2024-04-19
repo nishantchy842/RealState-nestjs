@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { PostTypeEnum } from 'src/common/enums/postType.enum';
 // import { PostTypeEnum } from 'src/common/enums/postType.enum';
 // import { PropertyEnum } from 'src/common/enums/property.enum';
 // import { PhotoEntity } from '../../uploads/entity/photo.entity';
@@ -69,13 +70,13 @@ export class CreatePostDto {
   @IsString()
   readonly longitude: string;
 
-  //   @ApiProperty({
-  //     enum: PostTypeEnum,
-  //     default: PostTypeEnum.rent,
-  //   })
-  //   //   @IsNotEmpty()
-  //   @IsString()
-  //   readonly type: PostTypeEnum;
+  @ApiProperty({
+    enum: PostTypeEnum,
+    default: PostTypeEnum.rent,
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly type: string;
 
   //   @ApiProperty({
   //     enum: PropertyEnum,

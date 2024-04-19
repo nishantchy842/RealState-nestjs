@@ -45,7 +45,6 @@ export class UsersController {
   findOne(@Req() req: Request) {
     const user: User | any = req.user;
 
-    console.log(req.user);
     return this.usersService.findOne(user.username);
   }
 
