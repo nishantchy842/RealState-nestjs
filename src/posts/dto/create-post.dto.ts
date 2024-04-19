@@ -23,7 +23,7 @@ export class CreatePostDto {
   @ApiProperty({
     example: ['url1', 'url2'],
   })
-  //   @IsNotEmpty()
+  @IsNotEmpty()
   @IsArray()
   @IsString({ each: true })
   readonly images: string[];

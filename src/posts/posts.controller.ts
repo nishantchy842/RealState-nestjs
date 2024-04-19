@@ -22,7 +22,7 @@ import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { ApiResponseInterceptor } from 'src/common/interceptors/apiResponse.interceptor';
 import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
-import { ValidateUser } from 'src/common/interceptors/validateUser.interceptor';
+import { ValidatePost } from 'src/common/interceptors/validatePost.interceptor';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -52,6 +52,7 @@ export class PostsController {
   @Patch(':id')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ValidatePost)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
@@ -59,7 +60,7 @@ export class PostsController {
   @Delete(':id')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(ValidateUser)
+  @UseInterceptors(ValidatePost)
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
   }

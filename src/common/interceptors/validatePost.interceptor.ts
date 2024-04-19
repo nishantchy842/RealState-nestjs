@@ -7,9 +7,11 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
-export class ValidateUser implements NestInterceptor {
+export class ValidatePost implements NestInterceptor {
+  constructor(private postsService: PostsService) {}
   async intercept(
     context: ExecutionContext,
     next: CallHandler<any>,
@@ -21,12 +23,14 @@ export class ValidateUser implements NestInterceptor {
       throw new UnauthorizedException('Something went wrong');
     }
 
-    const userId = (req.user as any).sub;
-    const paramId = +req.params.id;
+    const userId = (req.user as { sub: string }).sub;
+    const postId = Number(req.params.id);
 
-    if (userId !== paramId) {
+    const post = await this.postsService.findOne(postId);
+
+    if (!post || (post.userId as any).id !== userId) {
       throw new UnauthorizedException(
-        'User not authorized to delete or update ',
+        'User not authorized to delete this post',
       );
     }
 

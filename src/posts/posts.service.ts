@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -53,12 +53,17 @@ export class PostsService {
     });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: number, updatePostDto: UpdatePostDto): Promise<any> {
+    const post = await this.postRepo.update(id, updatePostDto);
+
+    return {
+      message: 'updated successfully',
+      status: HttpStatus.OK,
+      data: post,
+    };
   }
 
   async remove(id: number): Promise<any> {
-    console.log(id, 'id');
-    // return await this.postRepo.delete(id);
+    return await this.postRepo.delete(id);
   }
 }

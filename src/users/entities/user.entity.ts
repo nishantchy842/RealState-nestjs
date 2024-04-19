@@ -6,13 +6,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'User' })
 @Unique(['username'])
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   email: string;
@@ -28,6 +29,9 @@ export class UserEntity {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToMany(() => PostEntity, (post) => post.userId)
   posts: PostEntity[];
