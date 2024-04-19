@@ -32,7 +32,7 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.userRepo.find({ relations: ['posts'] });
   }
 
   async findOne(username: string): Promise<UserEntity> {
