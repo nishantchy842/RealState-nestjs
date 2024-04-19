@@ -4,7 +4,7 @@ import {
   HttpStatus,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 
 export class ApiResponseInterceptor implements NestInterceptor {
   intercept(
