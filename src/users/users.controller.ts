@@ -46,19 +46,28 @@ export class UsersController {
   @ApiBearerAuth()
   @UseInterceptors(ApiResponseInterceptor)
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(ApiResponseInterceptor)
-  findOne(@Req() req: Request) {
+  async findOne(@Req() req: Request) {
     const user: User | any = req.user;
 
-    return this.usersService.findOne(user.username);
+    return await this.usersService.findOne(user.username);
   }
 
-  @Patch(':id')
+  @Get('post')
+  @ApiOperation({ summary: 'all post of login user' })
+  @ApiBearerAuth()
+  @UseInterceptors(ApiResponseInterceptor)
+  @UseGuards(JwtAuthGuard)
+  async findAllPost(@Req() req: Request) {
+    console.log(req.user, 'res');
+    return await this.usersService.userAllPosts((req.user as any).username);
+  }
+
+  @Patch()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ValidateUser)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update((req.user as any).sub, updateUserDto);
   }
 
   @Delete(':id')

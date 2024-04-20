@@ -24,11 +24,11 @@ export class ValidateUser implements NestInterceptor {
     const userId = (req.user as any).sub;
     const paramId = +req.params.id;
 
-    if (userId !== paramId) {
-      throw new UnauthorizedException(
-        'User not authorized to delete or update ',
-      );
-    }
+    // if (userId !== paramId) {
+    //   throw new UnauthorizedException(
+    //     'User not authorized to delete or update ',
+    //   );
+    // }
 
     return next.handle();
   }

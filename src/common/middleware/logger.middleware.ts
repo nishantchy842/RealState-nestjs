@@ -11,17 +11,13 @@ export class LoggerMiddleware implements NestMiddleware {
     private readonly configService: ConfigService,
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    console.log(req.headers['authorization'], 'middleware');
-
     const authheader = await req.headers['authorization'];
 
     const token = await authheader.split(' ')[1];
 
-    const decodeToke = await this.jwtService.verify(token, {
+    await this.jwtService.verify(token, {
       secret: this.configService.get<string>(EnvList.JWT_SECRET_KEY),
     });
-
-    console.log(decodeToke);
 
     next();
   }

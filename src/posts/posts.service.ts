@@ -8,18 +8,31 @@ import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
 import { PageDto } from 'src/common/pagination/page.dto';
 import { PaginationEnum } from 'src/common/enums/pagination.enum';
 import { PostSearchDto } from './dto/postSearch.dto';
+import { PostDetailsEntity } from './entities/postDetails.entity';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postRepo: Repository<PostEntity>,
+    @InjectRepository(PostDetailsEntity)
+    private readonly postDetailsRepo: Repository<PostDetailsEntity>,
   ) {}
 
   async create(createPostDto: CreatePostDto, req) {
-    const res = await this.postRepo.save({ ...createPostDto, userId: req.sub });
+    console.log(createPostDto, 'create');
+    const { postDetails, ...rem } = createPostDto;
 
-    return res;
+    const postDetailsRes = await this.postDetailsRepo.save({
+      ...postDetails,
+    });
+    const post = await this.postRepo.save({
+      ...rem,
+      userId: req.sub,
+      postDetail: postDetailsRes,
+    });
+
+    return { massage: 'created successfully', data: post };
   }
 
   async findAll(
@@ -32,7 +45,7 @@ export class PostsService {
 
     if (pagination === PaginationEnum.false) {
       const posts = await this.postRepo.find({
-        relations: ['userId'],
+        relations: ['userId', 'postDetail'],
       });
 
       return new PageDto(posts, itemCount, null);
@@ -52,7 +65,7 @@ export class PostsService {
   async findOne(id: number): Promise<PostEntity> {
     return await this.postRepo.findOne({
       where: { id },
-      relations: ['userId'],
+      relations: ['userId', 'postDetail'],
     });
   }
 
@@ -92,13 +105,13 @@ export class PostsService {
       where.price = Between(postSearch.priceMin, postSearch.priceMax);
     }
 
-    const { page, take, order } = pageOptionDto;
+    const { take, order, skip } = pageOptionDto;
 
     const post = await this.postRepo.find({
       where,
-      relations: ['userId'],
+      relations: ['userId', 'postDetail'],
       take,
-      skip: (page - 1) * take,
+      skip,
       order: {
         updatedAt: order,
       },

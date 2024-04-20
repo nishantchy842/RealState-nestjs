@@ -2,9 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { PostTypeEnum } from 'src/common/enums/postType.enum';
 import { PropertyEnum } from 'src/common/enums/property.enum';
-// import { PostTypeEnum } from 'src/common/enums/postType.enum';
-// import { PropertyEnum } from 'src/common/enums/property.enum';
-// import { PhotoEntity } from '../../uploads/entity/photo.entity';
+import { CreatePostDetailsDto } from './postDetails.dto';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -15,7 +13,7 @@ export class CreatePostDto {
   readonly title: string;
 
   @ApiProperty({
-    example: 'your post price',
+    example: 5000,
   })
   @IsNotEmpty()
   @IsNumber()
@@ -87,4 +85,7 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
   readonly property: PropertyEnum;
+
+  @ApiProperty({ type: CreatePostDetailsDto })
+  readonly postDetails?: CreatePostDetailsDto;
 }

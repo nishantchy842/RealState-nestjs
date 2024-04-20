@@ -5,5 +5,5 @@ export const checkProduction = (
   production: any,
   dev: any,
 ) => {
-  return configService.get('NODE_ENV') === 'production' ? production : dev;
+  return configService.get('NODE_ENV') != 'production' ? dev : production;
 };

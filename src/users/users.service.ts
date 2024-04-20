@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
 import { PageDto } from 'src/common/pagination/page.dto';
 import { PaginationEnum } from 'src/common/enums/pagination.enum';
+import { PostEntity } from 'src/posts/entities/post.entity';
 
 @Injectable()
 export class UsersService {
@@ -87,7 +88,25 @@ export class UsersService {
       );
     }
 
-    return await this.userRepo.update(id, updateUserDto);
+    const hashPass = await bcrypt.hash(updateUserDto.password, 10);
+
+    return await this.userRepo.update(id, {
+      ...updateUserDto,
+      password: hashPass,
+    });
+  }
+
+  async userAllPosts(username: string) {
+    console.log(username, 'id');
+    const user = await this.userRepo.findOne({
+      where: { username },
+      relations: ['posts'],
+    });
+    const result: PostEntity[] = [];
+    for (const item of user.posts) {
+      result.push(item);
+    }
+    return result;
   }
 
   async remove(id: number) {

@@ -5,10 +5,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { PostDetailsEntity } from './postDetails.entity';
 
 @Entity({ database: process.env.POSTGRES_DATABASE, name: 'posts' })
 export class PostEntity {
@@ -54,14 +57,12 @@ export class PostEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  //   @Column()
-  //   user: User;
-
   @ManyToOne(() => UserEntity, (user) => user.posts)
   userId: string;
 
-  //   @Column()
-  //   postDetail: PostDetail?;
+  @OneToOne(() => PostDetailsEntity, (details) => details.post)
+  @JoinColumn()
+  postDetail: PostDetailsEntity;
 
   //   @Column()
   //   savedPosts: SavedPost[];

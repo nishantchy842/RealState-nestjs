@@ -7,6 +7,7 @@ import { checkProduction } from 'src/utils/config';
 import { DataSource } from 'typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { EnvListType } from 'src/common/enums/env.type';
+import { PostDetailsEntity } from 'src/posts/entities/postDetails.entity';
 
 export const OrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -37,7 +38,7 @@ export const OrmConfig: TypeOrmModuleAsyncOptions = {
       configService.get('PD_POSTGRES_DATABASE'),
       configService.get('POSTGRES_DATABASE'),
     ),
-    entities: [PostEntity, PhotoEntity, UserEntity],
+    entities: [PostEntity, PhotoEntity, UserEntity, PostDetailsEntity],
     // entities: [join(__dirname, '*.entity{.ts,.js}')],
     synchronize: true,
     autoLoadEntities: true,

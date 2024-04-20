@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -19,16 +20,20 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
+    try {
+      const user = await this.userService.findOne(username);
 
-    const comparePass = await bcrypt.compare(pass, user.password);
+      const comparePass = await bcrypt.compare(pass, user.password);
 
-    if (user && comparePass) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
+      if (user && comparePass) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...result } = user;
+        return result;
+      }
+      return null;
+    } catch (error) {
+      throw new BadRequestException('Invalid credential');
     }
-    return null;
   }
 
   async findOne(username: string) {
