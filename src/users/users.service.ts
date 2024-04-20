@@ -9,12 +9,14 @@ import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
 import { PageDto } from 'src/common/pagination/page.dto';
 import { PaginationEnum } from 'src/common/enums/pagination.enum';
 import { PostEntity } from 'src/posts/entities/post.entity';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    private readonly postService: PostsService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -59,7 +61,9 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<UserEntity> {
-    return await this.userRepo.findOne({ where: { username } });
+    return await this.userRepo.findOne({
+      where: { username },
+    });
   }
 
   async findByEmail(email: string) {
@@ -97,7 +101,6 @@ export class UsersService {
   }
 
   async userAllPosts(username: string) {
-    console.log(username, 'id');
     const user = await this.userRepo.findOne({
       where: { username },
       relations: ['posts'],
@@ -107,6 +110,58 @@ export class UsersService {
       result.push(item);
     }
     return result;
+  }
+
+  async findAllSavedPost(username: string) {
+    const user = await this.userRepo.findOne({
+      where: { username },
+    });
+    const result: PostEntity[] = [];
+
+    for (const item of user.savedPosts) {
+      const post = await this.postService.findOne(item);
+      if (post) {
+        result.push(post);
+      }
+    }
+
+    return result;
+  }
+
+  async savePost(username: string, postId: number): Promise<any> {
+    console.log(typeof postId, 'typeof');
+    const user = await this.findOne(username);
+
+    const savePost: number[] = [...user.savedPosts];
+
+    for (const item of savePost) {
+      if (item !== postId) {
+        savePost.push(postId);
+      }
+    }
+
+    await this.userRepo.save({
+      ...user,
+      savedPosts: savePost,
+    });
+
+    return savePost;
+  }
+
+  async removeSavedPost(username: string, postId: number) {
+    const user = await this.findOne(username);
+
+    const postIndex = user.savedPosts.findIndex((item) => item === postId);
+
+    if (postIndex < 0) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+
+    const rem = user.savedPosts.splice(postIndex, 1);
+
+    await this.userRepo.save({ ...user, savedPosts: rem });
+
+    return 'removed successfully';
   }
 
   async remove(id: number) {

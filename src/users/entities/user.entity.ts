@@ -36,8 +36,8 @@ export class UserEntity {
   @OneToMany(() => PostEntity, (post) => post.userId)
   posts: PostEntity[];
 
-  //   @Column()
-  //   savedPosts: string[];
+  @Column({ type: 'simple-array', nullable: true })
+  savedPosts: number[];
 
   //   @Column()
   //   chats: string[];

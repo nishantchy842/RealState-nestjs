@@ -15,9 +15,11 @@ export class LoggerMiddleware implements NestMiddleware {
 
     const token = await authheader.split(' ')[1];
 
-    await this.jwtService.verify(token, {
+    const decodeToken = await this.jwtService.verify(token, {
       secret: this.configService.get<string>(EnvList.JWT_SECRET_KEY),
     });
+
+    req['user'] = decodeToken;
 
     next();
   }

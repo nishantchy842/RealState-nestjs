@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { LoggerMiddleware } from 'src/common/middleware/logger.middleware';
 import { JwtService } from '@nestjs/jwt';
+import { PostsModule } from 'src/posts/posts.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity]), PostsModule],
   controllers: [UsersController],
   providers: [UsersService, JwtService],
   exports: [UsersService],
