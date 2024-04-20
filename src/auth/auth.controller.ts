@@ -24,7 +24,6 @@ export class AuthController {
   @UseGuards(LocalGuard)
   @ApiBody({ type: SignInDto })
   async login(@Req() req: Request) {
-    console.log(req.user, 'login');
     return await this.authService.login(req.user);
   }
 

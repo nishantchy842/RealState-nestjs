@@ -6,6 +6,7 @@ import { PostEntity } from 'src/posts/entities/post.entity';
 import { checkProduction } from 'src/utils/config';
 import { DataSource } from 'typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { EnvListType } from 'src/common/enums/env.type';
 
 export const OrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -52,4 +53,38 @@ export const OrmConfig: TypeOrmModuleAsyncOptions = {
 
     return dataSource;
   },
+};
+
+export const EnvList: EnvListType = {
+  PORT: 'PORT',
+
+  NODE_ENV: 'NODE_ENV',
+
+  HOST: 'HOST',
+
+  POSTGRES_HOST: 'POSTGRES_HOST',
+
+  POSTGRES_PORT: 'POSTGRES_PORT',
+
+  POSTGRES_USER: 'POSTGRES_USER',
+
+  POSTGRES_PASSWORD: 'POSTGRES_PASSWORD',
+
+  POSTGRES_DATABASE: 'POSTGRES_DATABASE',
+
+  TOKEN_EXPIRATION: 'TOKEN_EXPIRATION',
+
+  JWT_SECRET_KEY: 'JWT_SECRET_KEY',
+
+  PD_POSTGRES_HOST: 'PD_POSTGRES_HOST',
+
+  PD_POSTGRES_PORT: 'PD_POSTGRES_PORT',
+
+  PD_POSTGRES_USERNAME: 'PD_POSTGRES_USERNAME',
+
+  PD_POSTGRES_PASSWORD: 'PD_POSTGRES_PASSWORD',
+
+  PD_POSTGRES_DATABASE: 'PD_POSTGRES_DATABASE',
+
+  ENDPOINT_CORS: 'ENDPOINT_CORS',
 };

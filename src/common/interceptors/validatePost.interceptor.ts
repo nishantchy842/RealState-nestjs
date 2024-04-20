@@ -17,7 +17,7 @@ export class ValidatePost implements NestInterceptor {
     next: CallHandler<any>,
   ): Promise<Observable<any>> {
     const httpContext = context.switchToHttp();
-    const req: Request = httpContext.getRequest();
+    const req = httpContext.getRequest<Request>();
 
     if (!req.user) {
       throw new UnauthorizedException('Something went wrong');

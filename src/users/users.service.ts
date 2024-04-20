@@ -37,7 +37,7 @@ export class UsersService {
   async findAll(pageOptionDto: PageOptionsDto): Promise<PageDto<UserEntity>> {
     const itemCount = await this.userRepo.count();
 
-    const { page, pagination, take, order } = pageOptionDto;
+    const { pagination, take, order } = pageOptionDto;
 
     if (pagination === PaginationEnum.false) {
       const user = await this.userRepo.find();
@@ -48,7 +48,7 @@ export class UsersService {
     const users = await this.userRepo.find({
       relations: ['posts'],
       take,
-      skip: (page - 1) * take,
+      skip: pageOptionDto.skip,
       order: {
         updatedAt: order,
       },
@@ -58,7 +58,6 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<UserEntity> {
-    console.log(username, 'username');
     return await this.userRepo.findOne({ where: { username } });
   }
 

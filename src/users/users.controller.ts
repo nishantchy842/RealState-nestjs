@@ -36,9 +36,10 @@ export class UsersController {
   }
 
   @Get()
+  @ApiBearerAuth()
   @UseInterceptors(ApiResponseInterceptor)
-  findAll(@Param() pageOptionDto: PageOptionsDto): Promise<any> {
-    return this.usersService.findAll(pageOptionDto);
+  async findAll(@Param() pageOptionDto: PageOptionsDto) {
+    return await this.usersService.findAll(pageOptionDto);
   }
 
   @Get('user')
