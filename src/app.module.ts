@@ -10,6 +10,7 @@ import { UploadsModule } from './uploads/uploads.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { SavedPostModule } from './saved-post/saved-post.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { JwtModule } from '@nestjs/jwt';
     UploadsModule,
     UsersModule,
     AuthModule,
+    SavedPostModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

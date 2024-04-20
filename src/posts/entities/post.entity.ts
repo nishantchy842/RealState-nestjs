@@ -7,11 +7,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { PostDetailsEntity } from './postDetails.entity';
+import { SavedPostEntity } from 'src/saved-post/entities/saved-post.entity';
 
 @Entity({ database: process.env.POSTGRES_DATABASE, name: 'posts' })
 export class PostEntity {
@@ -64,6 +66,6 @@ export class PostEntity {
   @JoinColumn()
   postDetail: PostDetailsEntity;
 
-  //   @Column()
-  //   savedPosts: SavedPost[];
+  @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.post)
+  savedBy: SavedPostEntity[];
 }

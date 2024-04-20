@@ -1,4 +1,5 @@
 import { PostEntity } from 'src/posts/entities/post.entity';
+import { SavedPostEntity } from 'src/saved-post/entities/saved-post.entity';
 import {
   Column,
   CreateDateColumn,
@@ -36,8 +37,8 @@ export class UserEntity {
   @OneToMany(() => PostEntity, (post) => post.userId)
   posts: PostEntity[];
 
-  @Column({ type: 'simple-array', nullable: true })
-  savedPosts: number[];
+  @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.user)
+  savedPosts: SavedPostEntity[];
 
   //   @Column()
   //   chats: string[];

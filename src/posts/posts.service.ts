@@ -45,7 +45,7 @@ export class PostsService {
 
     if (pagination === PaginationEnum.false) {
       const posts = await this.postRepo.find({
-        relations: ['userId', 'postDetail'],
+        relations: ['userId', 'postDetail', 'savedBy'],
       });
 
       return new PageDto(posts, itemCount, null);
@@ -65,7 +65,7 @@ export class PostsService {
   async findOne(id: number): Promise<PostEntity> {
     return await this.postRepo.findOne({
       where: { id },
-      relations: ['userId', 'postDetail'],
+      relations: ['userId', 'postDetail', 'savedBy'],
     });
   }
 
@@ -109,7 +109,7 @@ export class PostsService {
 
     const post = await this.postRepo.find({
       where,
-      relations: ['userId', 'postDetail'],
+      relations: ['userId', 'postDetail', 'savedBy'],
       take,
       skip,
       order: {
