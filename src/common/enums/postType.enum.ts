@@ -1,4 +1,4 @@
 export enum PostTypeEnum {
-  buy,
-  rent,
+  buy = 'buy',
+  rent = 'rent',
 }

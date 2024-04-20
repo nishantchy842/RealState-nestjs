@@ -1,5 +1,6 @@
 import * as joi from 'joi';
 import { PostTypeEnum } from 'src/common/enums/postType.enum';
+import { PropertyEnum } from 'src/common/enums/property.enum';
 
 export const CREATE_POST_SCHEMA = joi.object({
   title: joi.string().required(),
@@ -14,5 +15,9 @@ export const CREATE_POST_SCHEMA = joi.object({
   type: joi
     .string()
     .valid(...Object.values(PostTypeEnum))
+    .required(),
+  property: joi
+    .string()
+    .valid(...Object.values(PropertyEnum))
     .required(),
 });

@@ -1,6 +1,6 @@
 export enum PropertyEnum {
-  apartment,
-  house,
-  condo,
-  land,
+  apartment = 'apartment',
+  house = 'house',
+  condo = 'condo',
+  land = 'land',
 }

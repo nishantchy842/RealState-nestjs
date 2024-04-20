@@ -1,12 +1,13 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
 import { PageDto } from 'src/common/pagination/page.dto';
 import { PaginationEnum } from 'src/common/enums/pagination.enum';
+import { PostSearchDto } from './dto/postSearch.dto';
 
 @Injectable()
 export class PostsService {
@@ -21,8 +22,11 @@ export class PostsService {
     return res;
   }
 
-  async findAll(pageOptionDto: PageOptionsDto): Promise<PageDto<PostEntity>> {
-    const { page, take, pagination, order } = pageOptionDto;
+  async findAll(
+    pageOptionDto: PageOptionsDto,
+    postSearchDto: PostSearchDto,
+  ): Promise<PageDto<PostEntity>> {
+    const { page, take, pagination } = pageOptionDto;
 
     const itemCount = await this.postRepo.count();
 
@@ -34,14 +38,13 @@ export class PostsService {
       return new PageDto(posts, itemCount, null);
     }
 
-    const posts = await this.postRepo.find({
-      relations: ['userId'],
-      take,
-      skip: (page - 1) * take,
-      order: {
-        updatedAt: order,
-      },
-    });
+    if (pagination === PaginationEnum.true && !page && !take) {
+      throw new BadRequestException(
+        'page and take is required in pagination true',
+      );
+    }
+
+    const posts = await this.AllPostAccQuery(pageOptionDto, postSearchDto);
 
     return await new PageDto(posts, itemCount, pageOptionDto);
   }
@@ -65,5 +68,42 @@ export class PostsService {
 
   async remove(id: number): Promise<any> {
     return await this.postRepo.delete(id);
+  }
+
+  async AllPostAccQuery(
+    pageOptionDto: PageOptionsDto,
+    postSearch: PostSearchDto,
+  ): Promise<PostEntity[]> {
+    const where: PostEntity | any = {};
+
+    if (postSearch.city) {
+      where.city = postSearch.city;
+    }
+    if (postSearch.type) {
+      where.type = postSearch.type;
+    }
+    if (postSearch.property) {
+      where.property = postSearch.property;
+    }
+    if (postSearch.bedroom) {
+      where.bedroom = postSearch.bedroom;
+    }
+    if (postSearch.priceMin && postSearch.priceMax) {
+      where.price = Between(postSearch.priceMin, postSearch.priceMax);
+    }
+
+    const { page, take, order } = pageOptionDto;
+
+    const post = await this.postRepo.find({
+      where,
+      relations: ['userId'],
+      take,
+      skip: (page - 1) * take,
+      order: {
+        updatedAt: order,
+      },
+    });
+
+    return post;
   }
 }

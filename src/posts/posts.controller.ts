@@ -23,6 +23,7 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { ApiResponseInterceptor } from 'src/common/interceptors/apiResponse.interceptor';
 import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
 import { ValidatePost } from 'src/common/interceptors/validatePost.interceptor';
+import { PostSearchDto } from './dto/postSearch.dto';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -39,8 +40,11 @@ export class PostsController {
 
   @Get()
   @UseInterceptors(ApiResponseInterceptor)
-  findAll(@Query() pageOptionDto: PageOptionsDto) {
-    return this.postsService.findAll(pageOptionDto);
+  findAll(
+    @Query() pageOptionDto: PageOptionsDto,
+    @Query() postSearchDto: PostSearchDto,
+  ) {
+    return this.postsService.findAll(pageOptionDto, postSearchDto);
   }
 
   @Get(':id')
