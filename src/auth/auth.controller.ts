@@ -3,12 +3,13 @@ import {
   Controller,
   Post,
   Req,
+  Res,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { SignInDto } from './dto/signIn.dto';
 import { LocalGuard } from './guard/local.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -32,5 +33,11 @@ export class AuthController {
   @UsePipes(new JoiValidationPipe(REGISTER_VALIDATION))
   async register(@Body() payload: CreateUserDto) {
     return await this.authService.register(payload);
+  }
+
+  @Post('logout')
+  @ApiOperation({ summary: 'loguot' })
+  async loguot(@Res() res: Response) {
+    return await this.authService.logout(res);
   }
 }

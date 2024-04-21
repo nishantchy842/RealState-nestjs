@@ -1,9 +1,12 @@
+import { ChatEntity } from 'src/chats/entities/chat.entity';
 import { PostEntity } from 'src/posts/entities/post.entity';
 import { SavedPostEntity } from 'src/saved-post/entities/saved-post.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
@@ -40,8 +43,8 @@ export class UserEntity {
   @OneToMany(() => SavedPostEntity, (savedPost) => savedPost.user)
   savedPosts: SavedPostEntity[];
 
-  //   @Column()
-  //   chats: string[];
+  @ManyToMany(() => ChatEntity)
+  chats: ChatEntity[];
 
   //   @Column()
   //   chatIDs: string[];

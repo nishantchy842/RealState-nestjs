@@ -9,6 +9,8 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { EnvListType } from 'src/common/enums/env.type';
 import { PostDetailsEntity } from 'src/posts/entities/postDetails.entity';
 import { SavedPostEntity } from 'src/saved-post/entities/saved-post.entity';
+import { ChatEntity } from 'src/chats/entities/chat.entity';
+import { MessageEntity } from 'src/messages/entity/message.entity';
 
 export const OrmConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
@@ -45,6 +47,8 @@ export const OrmConfig: TypeOrmModuleAsyncOptions = {
       UserEntity,
       PostDetailsEntity,
       SavedPostEntity,
+      ChatEntity,
+      MessageEntity,
     ],
     // entities: [join(__dirname, '*.entity{.ts,.js}')],
     synchronize: true,

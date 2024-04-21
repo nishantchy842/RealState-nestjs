@@ -10,6 +10,7 @@ import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -86,5 +87,11 @@ export class AuthService {
     }
 
     return await this.userService.create(payload);
+  }
+
+  async logout(res: Response) {
+    return await res.clearCookie('token').status(200).json({
+      message: 'logout successfully',
+    });
   }
 }
