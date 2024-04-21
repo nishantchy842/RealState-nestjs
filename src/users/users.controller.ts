@@ -18,7 +18,6 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { ApiResponseInterceptor } from 'src/common/interceptors/apiResponse.interceptor';
 import { ValidateUser } from 'src/common/interceptors/validateUser.interceptor';
-import { PageOptionsDto } from 'src/common/pagination/page-option.dto';
 
 type User = {
   username: string;
@@ -40,11 +39,8 @@ export class UsersController {
   @ApiBearerAuth()
   @UseInterceptors(ApiResponseInterceptor)
   @UseGuards(JwtAuthGuard)
-  async findAll(@Req() req: Request, @Param() pageOptionDto: PageOptionsDto) {
-    return await this.usersService.findAll(
-      (req.user as any).username,
-      pageOptionDto,
-    );
+  async findAll(@Req() req: Request) {
+    return await this.usersService.findAll((req.user as any).username);
   }
 
   @Get('user')

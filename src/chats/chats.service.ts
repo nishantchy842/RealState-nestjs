@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateChatDto } from './dto/update-chat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChatEntity } from './entities/chat.entity';
 import { Repository } from 'typeorm';
@@ -23,6 +22,7 @@ export class ChatsService {
     }
 
     const chatEntity = new ChatEntity();
+
     chatEntity.users = [user, receiver];
     chatEntity.userIDs = [user.id.toString(), receiver.id.toString()];
 
