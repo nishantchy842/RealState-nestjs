@@ -18,6 +18,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { ApiResponseInterceptor } from 'src/common/interceptors/apiResponse.interceptor';
 import { ValidateUser } from 'src/common/interceptors/validateUser.interceptor';
+import { PasswordDto } from './dto/password.dto';
 
 type User = {
   username: string;
@@ -66,7 +67,20 @@ export class UsersController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ValidateUser)
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.usersService.remove(+id);
+  }
+
+  @Patch('/changePassword')
+  @ApiOperation({ summary: 'change password' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ApiResponseInterceptor)
+  async changePassword(@Req() req: Request, @Body() data: PasswordDto) {
+    console.log(data, 'data');
+    return await this.usersService.forgetPassword(
+      (req.user as any).username,
+      data,
+    );
   }
 }

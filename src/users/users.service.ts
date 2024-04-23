@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +12,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { PostsService } from 'src/posts/posts.service';
 import { PostEntity } from 'src/posts/entities/post.entity';
+import { PasswordDto } from './dto/password.dto';
 
 @Injectable()
 export class UsersService {
@@ -100,6 +106,34 @@ export class UsersService {
       ...updateUserDto,
       password: hashPass,
     });
+  }
+
+  async forgetPassword(username: string, data: PasswordDto): Promise<boolean> {
+    const user = await this.findOne(username);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    console.log(user);
+
+    const compare = await bcrypt.compareSync(
+      data.currentPassword,
+      user.password,
+    );
+
+    const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+
+    if (compare) {
+      user.password = hashedPassword;
+    }
+
+    const updatedPassword = await this.userRepo.save(user);
+
+    if (updatedPassword) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   async remove(id: number) {

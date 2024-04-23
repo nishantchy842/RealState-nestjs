@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Post,
   Req,
@@ -34,5 +35,12 @@ export class MessagesController {
       chatId,
       data.text,
     );
+  }
+
+  @Delete(':messageId')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async deleteMessage(@Param('messageId') messageId: string) {
+    return await this.messagesService.deleteMessage(messageId);
   }
 }

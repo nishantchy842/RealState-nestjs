@@ -35,4 +35,10 @@ export class MessagesService {
 
     return message;
   }
+
+  async deleteMessage(messageId: string) {
+    const message = await this.messageRepo.delete(messageId);
+
+    return message;
+  }
 }
