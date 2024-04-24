@@ -38,6 +38,7 @@ export class AuthController {
   @Post('logout')
   @ApiOperation({ summary: 'loguot' })
   async loguot(@Res() res: Response) {
+    console.log('asf');
     return await this.authService.logout(res);
   }
 }
