@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { SavedPostModule } from './saved-post/saved-post.module';
 import { ChatsModule } from './chats/chats.module';
 import { MessagesModule } from './messages/messages.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MessagesModule } from './messages/messages.module';
     SavedPostModule,
     ChatsModule,
     MessagesModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],
